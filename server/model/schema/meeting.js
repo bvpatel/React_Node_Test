@@ -15,7 +15,7 @@ const meetingHistory = new mongoose.Schema({
     dateTime: String,
     notes: String,
     // meetingReminders: { type: String, required: true },
-    createBy: {
+    createdBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         require: true,
