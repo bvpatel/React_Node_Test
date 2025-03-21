@@ -15,7 +15,7 @@ const MeetingAdvanceSearch = (props) => {
     const dispatch = useDispatch();
     const initialValues = {
         agenda: '',
-        createBy: '',
+        createdBy: '',
         startDate: '',
         endDate: '',
         timeStartDate: '',
@@ -23,7 +23,7 @@ const MeetingAdvanceSearch = (props) => {
     }
     const validationSchema = yup.object({
         agenda: yup.string(),
-        createBy: yup.string().email('Invalid email format'),
+        createdBy: yup.string().email('Invalid email format'),
     });
     const formik = useFormik({
         initialValues: initialValues,
@@ -39,7 +39,7 @@ const MeetingAdvanceSearch = (props) => {
             //         const timeMomentDate = moment(timeItemDate).format('YYYY-MM-DD');
             //         return (
             //             (!values?.agenda || (item?.agenda && item?.agenda.toLowerCase().includes(values?.agenda?.toLowerCase()))) &&
-            //             (!values?.createBy || (item?.createBy && item?.createBy.toLowerCase().includes(values?.createBy?.toLowerCase()))) &&
+            //             (!values?.createdBy || (item?.createdBy && item?.createdBy.toLowerCase().includes(values?.createdBy?.toLowerCase()))) &&
             //             (!values?.startDate || (momentDate >= values.startDate)) &&
             //             (!values?.endDate || (momentDate <= values.endDate)) &&
             //             (!values.timeStartDate || (timeMomentDate >= values.timeStartDate)) &&
@@ -49,7 +49,7 @@ const MeetingAdvanceSearch = (props) => {
 
             const dateFrom = `${values?.startDate && `From: ${values?.startDate}`}${values?.endDate && ` To: ${values?.endDate}`}`;
             const timeDateFrom = `${values?.timeStartDate && `From: ${values?.timeStartDate}`}${values?.timeEndDate && ` To: ${values?.timeEndDate}`}`
-            // let getValue = [values.agenda, values?.createBy, (values?.startDate || values?.endDate) && dateFrom, (values?.timeStartDate || values?.timeEndDate) && timeDateFrom].filter(value => value);
+            // let getValue = [values.agenda, values?.createdBy, (values?.startDate || values?.endDate) && dateFrom, (values?.timeStartDate || values?.timeEndDate) && timeDateFrom].filter(value => value);
 
             const getValue = [
                 {
@@ -57,8 +57,8 @@ const MeetingAdvanceSearch = (props) => {
                     value: values.agenda
                 },
                 {
-                    name: ["createBy"],
-                    value: values.createBy
+                    name: ["createdBy"],
+                    value: values.createdBy
                 },
                 {
                     name: ["startDate", "endDate"],
@@ -113,12 +113,12 @@ const MeetingAdvanceSearch = (props) => {
                                 <Input
                                     fontSize='sm'
                                     onChange={handleChange} onBlur={handleBlur}
-                                    value={values?.createBy}
-                                    name="createBy"
+                                    value={values?.createdBy}
+                                    name="createdBy"
                                     placeholder='Enter Lead Email'
                                     fontWeight='500'
                                 />
-                                <Text mb='10px' color={'red'}> {errors.createBy && touched.createBy && errors.createBy}</Text>
+                                <Text mb='10px' color={'red'}> {errors.createdBy && touched.createdBy && errors.createdBy}</Text>
 
                             </GridItem>
                             <GridItem colSpan={{ base: 12 }}>

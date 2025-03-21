@@ -13,10 +13,10 @@ import { MeetingSchema } from 'schema';
 import { getApi, postApi } from 'services/api';
 
 const AddMeeting = (props) => {
-    const { onClose, isOpen, setAction, from, fetchData, view } = props
+    const { onClose, isOpen, setAction, id, data, from, fetchData, view } = props
     const [leaddata, setLeadData] = useState([])
     const [contactdata, setContactData] = useState([])
-    const [isLoding, setIsLoding] = useState(false)
+    const [isLoding, setIsLoading] = useState(false)
     const [contactModelOpen, setContactModel] = useState(false);
     const [leadModelOpen, setLeadModel] = useState(false);
     const todayTime = new Date().toISOString().split('.')[0];
@@ -36,29 +36,62 @@ const AddMeeting = (props) => {
         related: props.leadContect === 'contactView' ? 'Contact' : props.leadContect === 'leadView' ? 'Lead' : 'None',
         dateTime: '',
         notes: '',
-        createBy: user?._id,
+        createdBy: user?._id,
     }
 
     const formik = useFormik({
         initialValues: initialValues,
         validationSchema: MeetingSchema,
         onSubmit: (values, { resetForm }) => {
-            
+            AddData(values);
+            resetForm();
         },
     });
     const { errors, touched, values, handleBlur, handleChange, handleSubmit, setFieldValue } = formik
 
     const AddData = async () => {
-
+        try {
+            setIsLoading(true);
+            values.dateTime = dayjs(values.dateTime).format('YYYY-MM-DD HH:mm');
+            let response = await postApi('api/meeting/add', values);
+            if (response.status === 200) {
+                formik.resetForm();
+                onClose();
+                setAction((pre) => !pre)
+            }
+        } catch (e) {
+            console.error(e);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const fetchAllData = async () => {
-        
-    }
+        if (id) {
+            try {
+                setIsLoading(true);
+                let result = await getApi('api/meeting/view/', id);
+                setFieldValue('agenda', result?.data?.agenda);
+                setFieldValue('related', result?.data?.related);
+                setFieldValue('location', result?.data?.location);
+                setFieldValue('dateTime', result?.data?.dateTime);
+                setFieldValue('notes', result?.data?.notes);
+                setFieldValue('attendes', result?.data?.attendes || []);
+                setFieldValue('attendesLead', result?.data?.attendesLead || []);
+            } catch (e) {
+                console.error(e);
+            } finally {
+                setIsLoading(false);
+            }
+        }
+    };
 
     useEffect(() => {
+        if (data) {
+            fetchAllData();
+        }
+    }, [id, data]);
 
-    }, [props.id, values.related])
 
     const extractLabels = (selectedItems) => {
         return selectedItems.map((item) => item._id);
